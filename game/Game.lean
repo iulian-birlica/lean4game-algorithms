@@ -57,7 +57,7 @@ CaptionLong "Prove correctness, cost, and complexity of classic algorithms in Le
 
 Dependency Intro → StructuralInduction
 Dependency StructuralInduction → ProofEngineering
-Dependency StructuralInduction → HoareTriples
+-- Dependency StructuralInduction → HoareTriples
 Dependency HoareTriples → HoareTripleExercises
 
 -- Detached for now:
