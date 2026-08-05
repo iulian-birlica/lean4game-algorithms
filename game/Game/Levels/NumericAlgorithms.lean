@@ -1,0 +1,12 @@
+import Game.Levels.NumericAlgorithms.L01_BinaryPowInvariant
+import Game.Levels.NumericAlgorithms.L02_BinaryPowCorrect
+import Game.Levels.NumericAlgorithms.L03_BinaryPowSteps
+import Game.Levels.NumericAlgorithms.L04_EuclidInvariant
+import Game.Levels.NumericAlgorithms.L05_EuclidStepBound
+import Game.Levels.NumericAlgorithms.L06_ModularPowInvariant
+import Game.Levels.NumericAlgorithms.L07_ModularPowCorrect
+import Game.Levels.NumericAlgorithms.L08_SieveCrossOut
+import Game.Levels.NumericAlgorithms.L09_SieveCorrect
+import Game.Levels.NumericAlgorithms.L10_TrialPrimeCorrect
+
+World "NumericAlgorithms"

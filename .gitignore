@@ -1,0 +1,9 @@
+.lake/
+.i18n/
+archive.zip
+Game/levels.tar.gz
+vendor/Game
+vendor/GameSkeleton/
+vendor/NNG4/
+vendor/Robo/
+vendor/lean4game/
