@@ -75,24 +75,21 @@ After large refactors, run `lake build` before merging. Expected non-error
 noise includes the pervasive i18n messages and a handful of existing lint
 warnings in `Design`.
 
-## Fresh-clone bootstrap
+## Build
 
-This package lives in `game/` and must be reachable as a sibling of a
-`lean4game` checkout at `../lean4game`. The helper script below
-sets up that layout and intentionally skips cloning example/template games
-such as `Robo`, `NNG4`, and `GameSkeleton`.
+The game now pulls `GameServer` directly from GitHub, so no sibling
+`lean4game` checkout is required.
 
 ```bash
-./scripts/bootstrap-algorithmgame-deps.sh
 cd game
-lake update -R -Klean4game.local   # resolve deps; GameServer from ../lean4game/server
-lake exe cache get                  # pull prebuilt Mathlib oleans (skips an hours-long build)
-lake build                          # compiles the game and runs MakeGame
+lake update -R                     # resolve deps from GitHub
+lake exe cache get                 # pull prebuilt Mathlib oleans (skips an hours-long build)
+lake build                         # compiles the game and runs MakeGame
 ```
 
 `lake build` should finish with **no errors** and no warnings other than the
 pervasive `No translation (en) found` i18n noise (present even in
-`../lean4game`'s own source — harmless until the game is translated).
+`lean4game`'s own source — harmless until the game is translated).
 Any other warning (missing tactic/theorem/definition docs, "no world
 introducing X", a dependency-graph loop) means something needs fixing before
 merging.
@@ -100,19 +97,12 @@ merging.
 ## Running the game locally
 
 ```bash
-cd lean4game
-npm install     # first time only, or after node_modules gets corrupted
-npm start       # builds GameServer, starts the relay (port 8080) and Vite client (port 3000)
+npm start        # from the lean4game checkout, if you have one, to run the web client
 ```
 
-Open `http://localhost:3000/#/g/local/Game`. After editing any Lean
-file under `game/Game/`, re-run `lake build` in `game/` and
-reload the browser — no need to restart `npm start`.
-
-If `node_modules` ends up with broken bin symlinks (a stray `npm start`
-failing with `Cannot find module '../src/assert'` or similar), the fix is
-`rm -rf node_modules client/node_modules && npm install` from
-`lean4game/`.
+Open `http://localhost:3000/#/g/local/Game` after starting the client.
+After editing any Lean file under `game/Game/`, re-run `lake build` in
+`game/` and reload the browser.
 
 ## Renaming or reordering levels
 
