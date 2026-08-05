@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 
 BOOTSTRAP := ./scripts/bootstrap-algorithmgame-deps.sh
-GAME_DIR := Game
-LEAN4GAME_DIR := vendor/lean4game
+GAME_DIR := game
+LEAN4GAME_DIR := lean4game
 LEAN4GAME_NODE_MODULES := \
 	$(LEAN4GAME_DIR)/node_modules \
 	$(LEAN4GAME_DIR)/client/node_modules \

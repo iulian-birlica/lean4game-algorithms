@@ -3,9 +3,8 @@
 set -euo pipefail
 
 repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-game_dir="$repo_root/Game"
-vendor_dir="$repo_root/vendor"
-lean4game_dir="$vendor_dir/lean4game"
+game_dir="$repo_root/game"
+lean4game_dir="$repo_root/lean4game"
 toolchain_file="$game_dir/lean-toolchain"
 
 if [[ ! -d "$game_dir" ]]; then
@@ -24,8 +23,6 @@ if [[ -z "$lean4game_ref" ]]; then
   exit 1
 fi
 
-mkdir -p "$vendor_dir"
-
 if [[ -d "$lean4game_dir/.git" ]]; then
   echo "lean4game already present at $lean4game_dir"
 else
@@ -33,12 +30,6 @@ else
     https://github.com/leanprover-community/lean4game.git \
     "$lean4game_dir"
 fi
-
-if [[ -e "$vendor_dir/Game" && ! -L "$vendor_dir/Game" ]]; then
-  echo "Expected $vendor_dir/Game to be a symlink" >&2
-  exit 1
-fi
-ln -sfn ../Game "$vendor_dir/Game"
 
 cat <<EOF
 Dependencies downloaded.

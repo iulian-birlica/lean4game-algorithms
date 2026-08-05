@@ -9,7 +9,7 @@ rev = "v4.28.0"
 [[require]]
 name = "GameServer"
 scope = "hhu-adam"
-path = "vendor/lean4game/server"
+path = "../lean4game/server"
 
 [[lean_lib]]
 name = "Game"

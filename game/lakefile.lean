@@ -5,13 +5,13 @@ open Lake DSL
 def leanVersion : String := s!"v{Lean.versionString}"
 
 /--
-Use the GameServer from the vendored `lean4game` checkout next to this game.
+Use the GameServer from a sibling `lean4game` checkout next to this game.
 Activated with `lake update -Klean4game.local`.
 -/
 def LocalGameServer : Dependency := {
   name := `GameServer
   scope := "hhu-adam"
-  src? := DependencySrc.path "../vendor/lean4game/server"
+  src? := DependencySrc.path "../lean4game/server"
   version? := none
   opts := ∅
 }

@@ -77,23 +77,22 @@ warnings in `Design`.
 
 ## Fresh-clone bootstrap
 
-This package lives in `Game/` and must be reachable as a sibling of the
-vendored `lean4game` checkout at `vendor/lean4game`; that's what the symlink
-`vendor/Game -> ../Game` is for. The helper script below
-creates exactly that layout and intentionally skips cloning example/template
-games such as `Robo`, `NNG4`, and `GameSkeleton`.
+This package lives in `game/` and must be reachable as a sibling of a
+`lean4game` checkout at `../lean4game`. The helper script below
+sets up that layout and intentionally skips cloning example/template games
+such as `Robo`, `NNG4`, and `GameSkeleton`.
 
 ```bash
 ./scripts/bootstrap-algorithmgame-deps.sh
-cd Game
-lake update -R -Klean4game.local   # resolve deps; GameServer from vendor/lean4game/server
+cd game
+lake update -R -Klean4game.local   # resolve deps; GameServer from ../lean4game/server
 lake exe cache get                  # pull prebuilt Mathlib oleans (skips an hours-long build)
 lake build                          # compiles the game and runs MakeGame
 ```
 
 `lake build` should finish with **no errors** and no warnings other than the
 pervasive `No translation (en) found` i18n noise (present even in
-`vendor/lean4game`'s own source — harmless until the game is translated).
+`../lean4game`'s own source — harmless until the game is translated).
 Any other warning (missing tactic/theorem/definition docs, "no world
 introducing X", a dependency-graph loop) means something needs fixing before
 merging.
@@ -101,19 +100,19 @@ merging.
 ## Running the game locally
 
 ```bash
-cd ../vendor/lean4game
+cd lean4game
 npm install     # first time only, or after node_modules gets corrupted
 npm start       # builds GameServer, starts the relay (port 8080) and Vite client (port 3000)
 ```
 
 Open `http://localhost:3000/#/g/local/Game`. After editing any Lean
-file under `Game/Game/`, re-run `lake build` in `Game/` and
+file under `game/Game/`, re-run `lake build` in `game/` and
 reload the browser — no need to restart `npm start`.
 
 If `node_modules` ends up with broken bin symlinks (a stray `npm start`
 failing with `Cannot find module '../src/assert'` or similar), the fix is
 `rm -rf node_modules client/node_modules && npm install` from
-`vendor/lean4game/`.
+`lean4game/`.
 
 ## Renaming or reordering levels
 
@@ -123,22 +122,22 @@ target world so their alphabetical order matches the intended in-game order,
 then run:
 
 ```bash
-./sofi.sh Game/Levels/<World>
+./sofi.sh game/Game/Levels/<World>
 ```
 
 The script will rename active level files to `L01_...`, `L02_...`, ...,
 update each file's `Level N`, fix imports of previous levels in the same
-world, and rewrite `Game/Levels/<World>.lean`.
+world, and rewrite `game/Game/Levels/<World>.lean`.
 
 ## Adding a level
 
 1. Pick the next theorem from the original course source for the world you're
    extending.
 2. If it needs new answer-free definitions, add them to
-   `Game/Support/<World>.lean` with a `/-- ... -/` docstring on each — Lean's
+   `game/Support/<World>.lean` with a `/-- ... -/` docstring on each — Lean's
    own docstrings satisfy the engine's documentation requirement without a
    separate `DefinitionDoc`/`TheoremDoc` entry, as long as one exists.
-3. Create `Game/Levels/<World>/LNN_Name.lean`:
+3. Create `game/Levels/<World>/LNN_Name.lean`:
    - `import Game.Metadata` (+ `import Game.Support.<World>` if needed)
    - `World "<World>"`, `Level N`, `Title`, `Introduction`
    - `Statement <binders> : <goal> := by <full model proof>` with `Hint`s at
@@ -146,11 +145,11 @@ world, and rewrite `Game/Levels/<World>.lean`.
    - `Conclusion`
    - `NewTactic`/`NewTheorem`/`NewDefinition` for anything the proof uses for
      the first time anywhere in the game (fully-qualified names)
-4. Add the new file's import to `Game/Levels/<World>.lean`, in level order.
+4. Add the new file's import to `game/Levels/<World>.lean`, in level order.
 5. `lake build`. Fix any warning it reports — it will tell you exactly which
    identifier needs a `NewTheorem`/`NewDefinition`, or (only for Mathlib
    lemmas with no docstring of their own) a `TheoremDoc`/`DefinitionDoc` entry
-   in `Game/Doc/`.
+   in `game/Doc/`.
 6. Reload the browser and play the level.
 
 ## Gotchas learned while building Milestones 1–6
@@ -169,14 +168,14 @@ world, and rewrite `Game/Levels/<World>.lean`.
   binder's type) don't need a `NewDefinition`.
 - Most Mathlib lemmas do **not** have docstrings, so `NewTheorem` on them
   usually produces a real warning, not just an info message — check
-  `Game/Doc/Theorems.lean` for the running list before assuming Mathlib's
+  `game/Doc/Theorems.lean` for the running list before assuming Mathlib's
   docs will cover a new lemma for free. Mathlib *definitions* fare much
   better (most already have docstrings).
 - Auto-generated declarations — a function's `.induct` functional-induction
   principle, and constructors of an `inductive` (unless you add a `/-- -/`
   directly above each constructor line) — have nowhere to write an inline
   docstring. Use `DefinitionDoc Foo.induct as "Foo.induct" in "Category"`
-  in `Game/Doc/Theorems.lean` instead (same file as `TheoremDoc`/
+  in `game/Doc/Theorems.lean` instead (same file as `TheoremDoc`/
   `TacticDoc`; `DefinitionDoc` just needs a preceding `/-- -/` comment).
 - Generic core combinators reached via dot-notation on a relation (`.symm`,
   `.trans`) can surface as bare `symm`/`trans`/`Trans.trans` dependencies
